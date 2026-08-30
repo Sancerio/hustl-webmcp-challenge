@@ -1,0 +1,8 @@
+.git/
+.dart_tool/
+.vercel/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+test/
+*.log
