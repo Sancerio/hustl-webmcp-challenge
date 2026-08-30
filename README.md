@@ -9,6 +9,8 @@ data. Its route-scoped WebMCP tools can read bounded context and prepare
 reviewable changes. The athlete stays in control: they select the target, see
 the proposal diff, and Apply or Dismiss it in Hustl.
 
+**Live evaluator:** https://hustl-webmcp-challenge.vercel.app/demo
+
 ## Try it locally
 
 Install a compatible Flutter stable SDK, then run:
