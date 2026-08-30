@@ -1,0 +1,8 @@
+{
+  "HUSTL_API_BASE_URL": "https://offline.invalid",
+  "HUSTL_CHALLENGE": "true",
+  "HUSTL_DEMO": "true",
+  "HUSTL_MCP_CONNECTOR_URL": "https://offline.invalid/mcp",
+  "HUSTL_TELEMETRY": "false",
+  "HUSTL_WEBMCP": "true"
+}
