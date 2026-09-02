@@ -65,6 +65,7 @@ trap cleanup_manifest_check EXIT
 
 find "$PACKAGE_DIR" -type f \
   ! -path "$PACKAGE_DIR/.dart_tool/*" \
+  ! -path "$PACKAGE_DIR/.git" \
   ! -path "$PACKAGE_DIR/.git/*" \
   ! -path "$PACKAGE_DIR/.playwright-cli/*" \
   ! -path "$PACKAGE_DIR/.vercel/*" \

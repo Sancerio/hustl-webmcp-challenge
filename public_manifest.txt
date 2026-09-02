@@ -23,6 +23,7 @@ lib/main.dart
 lib/src/app.dart
 lib/src/model/evaluator_state.dart
 lib/src/model/models.dart
+lib/src/ui/charts.dart
 lib/src/ui/coach_screens.dart
 lib/src/ui/design.dart
 lib/src/ui/evaluator_scope.dart
