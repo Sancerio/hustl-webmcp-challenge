@@ -2,12 +2,12 @@
 
 ## Supported version
 
-Security fixes are made on the latest `main` branch. This evaluator contains
-synthetic data only and is not the production Hustl application.
+Security fixes are made on the latest `main` branch. The evaluator uses only
+synthetic data and is separate from the production Hustl application.
 
 ## Reporting a vulnerability
 
-Please use the repository's private GitHub security-advisory reporting flow.
+Use the repository's private GitHub security-advisory reporting flow.
 If GitHub does not show that flow, open a content-free issue titled "Security
 contact requested" without reproduction details, private values, or affected
 paths; a maintainer will provide a private channel. Never disclose a suspected
