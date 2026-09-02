@@ -1,7 +1,8 @@
 # Contributing
 
-Thank you for improving the Hustl WebMCP evaluator. This repository is a
-standalone, synthetic collaboration surface—not the production Hustl app.
+This repository contains a synthetic Hustl WebMCP evaluator. It is separate
+from the production Hustl app and must remain safe to run without an account or
+backend.
 
 ## Boundaries
 
@@ -17,10 +18,10 @@ standalone, synthetic collaboration surface—not the production Hustl app.
 
 ## Pull requests
 
-Keep one concern per pull request. Explain the user-visible behavior, safety
-boundary, and validation evidence. Update tests and documentation with behavior
-changes. UI changes need desktop and narrow-mobile browser proof with a clean
-console.
+Keep one concern per pull request. Describe the user-visible change, the data
+or authority it can access, and the validation evidence. Update tests and docs
+when behavior changes. UI changes require browser evidence at desktop and
+narrow-mobile widths, with no console warnings or errors.
 
 Before opening a pull request, run:
 
@@ -34,11 +35,13 @@ node --test test/webmcp/*.mjs
 bash scripts/build.sh
 ```
 
-Changes to the runtime guard, WebMCP bridge/catalog, proposal state machine,
-release scripts, headers, or CI require an independent security-minded review.
-Public CI additionally downloads checksum-pinned Flutter and Gitleaks archives,
-proves current-source and removed-history scanner canaries, scans the complete
-Git history and generated web build, and verifies shipped license notices.
-Workflow dependencies must be direct, commit-pinned external Actions; local
-composite Actions are intentionally rejected so transitive dependencies cannot
-escape the pin verifier.
+Changes to the runtime guard, WebMCP bridge or catalog, proposal state machine,
+release scripts, response headers, or CI require an independent security
+review.
+
+Public CI downloads checksum-pinned Flutter and Gitleaks archives. It tests the
+current-source and removed-history scanner canaries, scans the full Git history
+and generated web build, and verifies the bundled license notices. Workflow
+dependencies must be direct external Actions pinned to commits. Local composite
+Actions are not allowed because their transitive dependencies cannot be checked
+by the pin verifier.
