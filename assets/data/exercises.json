@@ -1,0 +1,18 @@
+[
+  {"id":"barbell-bench-press","slug":"barbell-bench-press","name":"Barbell Bench Press","muscles":["Chest","Triceps"],"loggingMode":"weight_reps"},
+  {"id":"barbell-back-squat","slug":"barbell-back-squat","name":"Barbell Back Squat","muscles":["Quads","Glutes"],"loggingMode":"weight_reps"},
+  {"id":"romanian-deadlift","slug":"romanian-deadlift","name":"Romanian Deadlift","muscles":["Hamstrings","Glutes"],"loggingMode":"weight_reps"},
+  {"id":"weighted-pull-up","slug":"weighted-pull-up","name":"Weighted Pull-up","muscles":["Lats","Biceps"],"loggingMode":"weight_reps"},
+  {"id":"overhead-press","slug":"overhead-press","name":"Overhead Press","muscles":["Shoulders","Triceps"],"loggingMode":"weight_reps"},
+  {"id":"barbell-row","slug":"barbell-row","name":"Barbell Row","muscles":["Lats","Rear Delts"],"loggingMode":"weight_reps"},
+  {"id":"leg-press","slug":"leg-press","name":"Leg Press","muscles":["Quads","Glutes"],"loggingMode":"weight_reps"},
+  {"id":"incline-dumbbell-press","slug":"incline-dumbbell-press","name":"Incline Dumbbell Press","muscles":["Chest","Triceps"],"loggingMode":"weight_reps"},
+  {"id":"dumbbell-lateral-raise","slug":"dumbbell-lateral-raise","name":"Dumbbell Lateral Raise","muscles":["Shoulders"],"loggingMode":"weight_reps"},
+  {"id":"cable-triceps-pushdown","slug":"cable-triceps-pushdown","name":"Cable Triceps Pushdown","muscles":["Triceps"],"loggingMode":"weight_reps"},
+  {"id":"lat-pulldown","slug":"lat-pulldown","name":"Lat Pulldown","muscles":["Lats","Biceps"],"loggingMode":"weight_reps"},
+  {"id":"barbell-curl","slug":"barbell-curl","name":"Barbell Curl","muscles":["Biceps"],"loggingMode":"weight_reps"},
+  {"id":"barbell-deadlift","slug":"barbell-deadlift","name":"Barbell Deadlift","muscles":["Hamstrings","Glutes","Back"],"loggingMode":"weight_reps"},
+  {"id":"bulgarian-split-squat","slug":"bulgarian-split-squat","name":"Bulgarian Split Squat","muscles":["Quads","Glutes"],"loggingMode":"weight_reps"},
+  {"id":"leg-extension","slug":"leg-extension","name":"Leg Extension","muscles":["Quads"],"loggingMode":"weight_reps"},
+  {"id":"standing-calf-raise","slug":"standing-calf-raise","name":"Standing Calf Raise","muscles":["Calves"],"loggingMode":"weight_reps"}
+]

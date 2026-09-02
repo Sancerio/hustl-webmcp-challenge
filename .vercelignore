@@ -1,9 +1,0 @@
-.git/
-.dart_tool/
-.vercel/
-.flutter/
-build/
-.flutter-plugins
-.flutter-plugins-dependencies
-test/
-*.log

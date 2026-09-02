@@ -1,40 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>html,body{background:#FFFFFF}@media (prefers-color-scheme: dark){html,body{background:#000000}}</style>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Hustl connects training, recovery, nutrition, and coaching in one collaborative fitness experience.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Hustl">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hustl brings training, recovery, nutrition, and human-reviewed coaching together.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self' data:; form-action 'none'; frame-src 'none'; img-src 'self' data: blob:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" type="image/svg+xml" href="icons/hustl-mark.svg">
   <title>Hustl · Train with context</title>
-  <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script src="runtime_guard.js"></script>
   <script src="webmcp_bridge.js"></script>
-  <script src="flutter_bootstrap.js" async></script>
+  <script src="bootstrap_gate.js"></script>
 </body>
 </html>
