@@ -48,6 +48,7 @@ void main() {
 
     expect(find.text('Calories'), findsOneWidget);
     expect(find.text('2,400 kcal'), findsNWidgets(2));
+    expect(find.text('Return to Train'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(const SizedBox.shrink());

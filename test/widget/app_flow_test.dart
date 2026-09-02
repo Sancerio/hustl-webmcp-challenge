@@ -106,7 +106,8 @@ void main() {
     expect(find.text('Dismiss'), findsNothing);
     expect(find.textContaining('terminal'), findsOneWidget);
 
-    await tester.tap(find.text('Train'));
+    expect(find.text('Continue to Train'), findsOneWidget);
+    await tester.tap(find.text('Continue to Train'));
     await _settle(tester);
     expect(find.text('118 / 180 g'), findsOneWidget);
 
@@ -256,6 +257,79 @@ void main() {
       await tester.pump();
     },
   );
+
+  testWidgets('proposal routes always provide a state-preserving Train exit', (
+    tester,
+  ) async {
+    final state = EvaluatorState()..exercises = fixtures;
+    final proposal = state.propose(
+      ProposalKind.templateCreate,
+      'Four-day strength plan',
+      const {
+        'plan': {
+          'name': 'Four-day strength plan',
+          'exercises': <Map<String, Object?>>[],
+        },
+      },
+    );
+    final host = _QuotaHost();
+    await tester.pumpWidget(EvaluatorApp(state: state, toolHost: host));
+    await _settle(tester);
+
+    await tester.tap(find.text('Coach'));
+    await _settle(tester);
+    await tester.tap(find.text(proposal.title));
+    await _settle(tester);
+    expect(find.text('Return to Train'), findsOneWidget);
+    final retainedCoach = host.activeDefinition('hustl_get_coach_activity');
+
+    await tester.tap(find.text('Return to Train'));
+    await _settle(tester);
+    expect(find.text('Train with context'), findsOneWidget);
+    expect(state.proposalById(proposal.id)!.status, ProposalStatus.pending);
+    expect(host.activeNames.toSet(), {
+      'hustl_get_today_context',
+      'hustl_open_surface',
+      'hustl_get_training_context',
+      'hustl_get_workout_history',
+      'hustl_get_exercise_history',
+    });
+    expect(await retainedCoach.handler(const {}), {
+      'status': 'unavailable',
+      'code': 'stale_route',
+    });
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
+
+  testWidgets('a refreshed proposal deep link can return to Train', (
+    tester,
+  ) async {
+    final binding = TestWidgetsFlutterBinding.ensureInitialized();
+    binding.platformDispatcher.defaultRouteNameTestValue =
+        '/proposals/proposal-missing';
+    addTearDown(() {
+      binding.platformDispatcher.defaultRouteNameTestValue = '/';
+    });
+    final state = EvaluatorState()..exercises = fixtures;
+    await tester.pumpWidget(EvaluatorApp(state: state));
+    await _settle(tester);
+
+    expect(find.text('Proposal not found'), findsOneWidget);
+    expect(
+      find.text(
+        'The evaluator resets its synthetic proposals after a refresh.',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Return to Train'));
+    await _settle(tester);
+    expect(find.text('Train with context'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
 }
 
 Future<void> _settle(WidgetTester tester) async {

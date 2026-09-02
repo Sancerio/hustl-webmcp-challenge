@@ -11,6 +11,11 @@ food-correction, food-removal, and workout-template proposals. Every proposal
 begins pending. Only the visible **Apply** and **Dismiss** controls in Coach can
 make a synthetic change or close a proposal.
 
+Proposal detail keeps an explicit **Return to Train** action, and a completed
+review exposes **Continue to Train**, so the athlete can resume the story
+without reloading and losing the in-memory collaboration state. A refreshed
+proposal deep link explains the reset and also provides a direct Train exit.
+
 ## Run locally
 
 ```bash

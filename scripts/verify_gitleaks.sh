@@ -44,6 +44,14 @@ printf 'api_key = "%s%s"\n' 'a9F4kLm2Qp7R' 'x8Vn3Tz6Wc1Y' \
   > "$current_canary/credential.txt"
 printf 'gitlab_token = "%s%s" # %s\n' 'glpat-' 'AbCdEfGhIjKlMnOpQrSt' \
   'gitleaks:allow' >> "$current_canary/credential.txt"
+mkdir -p "$current_canary/lib/core/services"
+{
+  printf 'class PreferencesService {\n'
+  printf '%s%s%s\n' \
+    '  static const String _keyPrFlagsRecomputedV1 = ' \
+    "'pr_flags_" "recomputed_v1';"
+  printf '}\n'
+} > "$current_canary/lib/core/services/preferences_service.dart"
 set +e
 "$gitleaks_bin" dir "${scanner_args[@]}" --report-format json \
   --report-path "$scratch/current.json" "$current_canary" >/dev/null 2>&1
@@ -56,7 +64,11 @@ fi
 node -e '
 const fs = require("node:fs");
 const report = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-if (!Array.isArray(report) || report.length < 2) process.exit(1);
+if (!Array.isArray(report) || report.length < 3) process.exit(1);
+if (!report.some(item =>
+  item.File.endsWith("lib/core/services/preferences_service.dart") &&
+  item.StartLine === 2
+)) process.exit(1);
 ' "$scratch/current.json"
 
 git -C "$history_canary" init -q

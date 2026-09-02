@@ -47,3 +47,10 @@ If any identity, private data, production origin, credential, unexpected file,
 or unreviewed Git history appears, stop and rebuild the public root commit from
 the corrected frozen source. Do not rewrite or force-push a published release
 to conceal the problem; publish a clear corrective commit and advisory.
+
+The repository's first published snapshot contains one reviewed Gitleaks false
+positive: an ordinary local preference key in commit `569ba63b`, not a
+credential. `config/gitleaks.toml` suppresses only that exact commit, path, and
+line with an AND-matched allowlist. Current source, builds, and every other
+historical location remain fully scanned, including a canary proving that the
+same text is rejected outside that exact historical location.

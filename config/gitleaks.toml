@@ -2,3 +2,11 @@ title = "Hustl public evaluator secret scanning"
 
 [extend]
 useDefault = true
+
+[[allowlists]]
+description = "Published v1 preference-key false positive; exact commit, path, and line only"
+condition = "AND"
+commits = ["569ba63b0db939a2230371b605e92d0090b3587d"]
+paths = ['''^lib/core/services/preferences_service\.dart$''']
+regexTarget = "line"
+regexes = ['''^\s*static const String _keyPrFlagsRecomputedV1 = 'pr_flags_recomputed_v1';\s*$''']
