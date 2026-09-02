@@ -98,14 +98,25 @@ class ProposalDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = EvaluatorScope.of(context);
     final proposal = state.proposalById(proposalId);
-    if (proposal == null) return const _NotFound(label: 'Proposal not found');
+    if (proposal == null) return const _ProposalNotFound();
     final pending = proposal.status == ProposalStatus.pending;
     return ListView(
       children: [
-        TextButton.icon(
-          onPressed: () => context.go('/proposals'),
-          icon: const Icon(Icons.arrow_back_rounded),
-          label: const Text('Back to Coach'),
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            TextButton.icon(
+              onPressed: () => context.go('/proposals'),
+              icon: const Icon(Icons.arrow_back_rounded),
+              label: const Text('Back to Coach'),
+            ),
+            TextButton.icon(
+              onPressed: () => context.go('/'),
+              icon: const Icon(Icons.fitness_center_rounded),
+              label: const Text('Return to Train'),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         PageHeading(
@@ -144,6 +155,13 @@ class ProposalDetailScreen extends StatelessWidget {
                 label: const Text('Dismiss'),
               ),
             ],
+          ),
+        ] else ...[
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: () => context.go('/'),
+            icon: const Icon(Icons.arrow_forward_rounded),
+            label: const Text('Continue to Train'),
           ),
         ],
       ],
@@ -708,11 +726,34 @@ String _fieldValue(String key, Object? value) {
   return '${_displayNumber(value)}$suffix';
 }
 
-class _NotFound extends StatelessWidget {
-  const _NotFound({required this.label});
-
-  final String label;
+class _ProposalNotFound extends StatelessWidget {
+  const _ProposalNotFound();
 
   @override
-  Widget build(BuildContext context) => Center(child: Text(label));
+  Widget build(BuildContext context) => Center(
+    child: SurfaceCard(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.inbox_outlined, size: 38, color: muted),
+          const SizedBox(height: 12),
+          Text(
+            'Proposal not found',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'The evaluator resets its synthetic proposals after a refresh.',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: () => context.go('/'),
+            icon: const Icon(Icons.fitness_center_rounded),
+            label: const Text('Return to Train'),
+          ),
+        ],
+      ),
+    ),
+  );
 }

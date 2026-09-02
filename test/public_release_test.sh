@@ -53,6 +53,11 @@ grep -Fq 'version=8.30.1' \
   "$package_dir/scripts/install_gitleaks.sh"
 grep -Fq '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb' \
   "$package_dir/scripts/install_gitleaks.sh"
+grep -Fq 'condition = "AND"' "$package_dir/config/gitleaks.toml"
+grep -Fq '569ba63b0db939a2230371b605e92d0090b3587d' \
+  "$package_dir/config/gitleaks.toml"
+grep -Fq '^lib/core/services/preferences_service\.dart$' \
+  "$package_dir/config/gitleaks.toml"
 canary="$(mktemp -d "${TMPDIR:-/tmp}/hustl-public-scan-canary.XXXXXX")"
 cleanup() {
   rm -rf "$canary"
