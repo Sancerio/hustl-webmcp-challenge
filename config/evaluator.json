@@ -1,0 +1,8 @@
+{
+  "mode": "synthetic-in-memory",
+  "network": "same-origin-assets-only",
+  "authentication": false,
+  "persistence": false,
+  "telemetry": false,
+  "webmcp": true
+}

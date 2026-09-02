@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "bash scripts/build_webmcp_evaluator.sh",
+  "buildCommand": "bash scripts/build.sh",
   "outputDirectory": "build/web",
   "framework": null,
   "rewrites": [
@@ -11,8 +11,91 @@
       "source": "/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
-        { "key": "X-Robots-Tag", "value": "noindex" },
-        { "key": "Referrer-Policy", "value": "no-referrer" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self' data:; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data: blob:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:" },
+        { "key": "Permissions-Policy", "value": "accelerometer=(), bluetooth=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=()" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
+      "source": "/",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/demo",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/health",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/nutrition",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/proposals",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/proposals/:path*",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/templates",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
+      ]
+    },
+    {
+      "source": "/templates/:path*",
+      "has": [
+        { "type": "header", "key": "Sec-Fetch-Dest", "value": "document" },
+        { "type": "header", "key": "Sec-Fetch-Mode", "value": "navigate" }
+      ],
+      "headers": [
+        { "key": "Clear-Site-Data", "value": "\"cookies\"" }
       ]
     }
   ]

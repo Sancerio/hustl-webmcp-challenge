@@ -1,3 +1,0 @@
-# Speed up flutter test runs by executing multiple test isolates in parallel.
-# The suite has been audited for isolate safety and runs cleanly at this level.
-concurrency: 6
