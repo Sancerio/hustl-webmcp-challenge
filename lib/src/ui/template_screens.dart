@@ -15,16 +15,30 @@ class TemplatesScreen extends StatelessWidget {
         const PageHeading(
           title: 'Templates',
           subtitle:
-              'Programs become live only after you approve their Coach proposal.',
+              'Saved training structures. AI changes still wait in Coach.',
         ),
         for (final template in templates) ...[
           SurfaceCard(
             padding: const EdgeInsets.all(8),
             child: ListTile(
               onTap: () => context.go('/templates/${template.id}'),
-              leading: const CircleAvatar(child: Icon(Icons.fitness_center)),
+              leading: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: hustleSurfaceHigh,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.fitness_center_rounded,
+                  color: hustleLavender,
+                  size: 20,
+                ),
+              ),
               title: Text(template.name),
-              subtitle: Text('${template.exercises.length} exercises'),
+              subtitle: Text(
+                '${template.exercises.length} exercises · strength · 3 days',
+              ),
               trailing: const Icon(Icons.chevron_right_rounded),
             ),
           ),

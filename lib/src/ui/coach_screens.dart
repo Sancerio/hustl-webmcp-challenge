@@ -5,8 +5,15 @@ import '../model/models.dart';
 import 'design.dart';
 import 'evaluator_scope.dart';
 
-class CoachScreen extends StatelessWidget {
+class CoachScreen extends StatefulWidget {
   const CoachScreen({super.key});
+
+  @override
+  State<CoachScreen> createState() => _CoachScreenState();
+}
+
+class _CoachScreenState extends State<CoachScreen> {
+  bool _showHistory = false;
 
   @override
   Widget build(BuildContext context) {
@@ -16,43 +23,57 @@ class CoachScreen extends StatelessWidget {
     return ListView(
       children: [
         PageHeading(
-          title: 'Coach',
-          subtitle: pending.isEmpty
-              ? 'No proposals are waiting. AI suggestions appear here for your decision.'
+          title: 'AI activity',
+          subtitle: _showHistory
+              ? '${recent.length} recent decision${recent.length == 1 ? '' : 's'}.'
+              : pending.isEmpty
+              ? 'No proposals are waiting for your decision.'
               : '${pending.length} proposal${pending.length == 1 ? '' : 's'} waiting for your review.',
         ),
-        if (pending.isEmpty && recent.isEmpty)
-          const SurfaceCard(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 28),
-              child: Column(
-                children: [
-                  Icon(Icons.inbox_outlined, size: 38, color: muted),
-                  SizedBox(height: 12),
-                  Text('Your review queue is clear.'),
-                ],
-              ),
-            ),
-          ),
-        for (final proposal in pending) ...[
-          _ProposalRow(proposal: proposal),
-          const SizedBox(height: 12),
-        ],
-        if (recent.isNotEmpty) ...[
-          const SizedBox(height: 20),
-          Text(
-            'Recent decisions',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 12),
+        _ActivityTabs(
+          showHistory: _showHistory,
+          onChanged: (showHistory) => setState(() {
+            _showHistory = showHistory;
+          }),
+        ),
+        const SizedBox(height: 16),
+        if (!_showHistory && pending.isEmpty)
+          const _EmptyActivity(message: 'Your review queue is clear.'),
+        if (_showHistory && recent.isEmpty)
+          const _EmptyActivity(message: 'No decisions in this evaluator run.'),
+        if (!_showHistory)
+          for (final proposal in pending) ...[
+            _ProposalRow(proposal: proposal),
+            const SizedBox(height: 12),
+          ],
+        if (_showHistory)
           for (final proposal in recent) ...[
             _ProposalRow(proposal: proposal),
             const SizedBox(height: 12),
           ],
-        ],
       ],
     );
   }
+}
+
+class _EmptyActivity extends StatelessWidget {
+  const _EmptyActivity({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) => SurfaceCard(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      child: Column(
+        children: [
+          const Icon(Icons.inbox_outlined, size: 38, color: muted),
+          const SizedBox(height: 12),
+          Text(message),
+        ],
+      ),
+    ),
+  );
 }
 
 class _ProposalRow extends StatelessWidget {
@@ -62,10 +83,18 @@ class _ProposalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SurfaceCard(
-    padding: const EdgeInsets.all(8),
+    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
     child: ListTile(
       onTap: () => context.go('/proposals/${proposal.id}'),
-      leading: CircleAvatar(child: Icon(_icon(proposal.kind))),
+      leading: Container(
+        width: 42,
+        height: 42,
+        decoration: BoxDecoration(
+          color: hustleSurfaceHigh,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(_icon(proposal.kind), color: hustleBlue, size: 20),
+      ),
       title: Text(proposal.title),
       subtitle: Text(_status(proposal.status)),
       trailing: const Icon(Icons.chevron_right_rounded),
@@ -87,6 +116,73 @@ class _ProposalRow extends StatelessWidget {
     ProposalStatus.rejected => 'Dismissed',
     ProposalStatus.conflicted => 'No longer current',
   };
+}
+
+class _ActivityTabs extends StatelessWidget {
+  const _ActivityTabs({required this.showHistory, required this.onChanged});
+
+  final bool showHistory;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: hustleSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: hustleBorder),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ActivityTab(
+            label: 'Pending',
+            selected: !showHistory,
+            onTap: () => onChanged(false),
+          ),
+          _ActivityTab(
+            label: 'History',
+            selected: showHistory,
+            onTap: () => onChanged(true),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _ActivityTab extends StatelessWidget {
+  const _ActivityTab({
+    required this.label,
+    required this.onTap,
+    this.selected = false,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: selected ? hustleSurfaceHigh : Colors.transparent,
+    borderRadius: BorderRadius.circular(9),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(9),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? hustleText : hustleMuted,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class ProposalDetailScreen extends StatelessWidget {
@@ -320,9 +416,9 @@ class _FoodDeleteDiff extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF1F0),
+        color: const Color(0xFF251619),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFF3B8B3)),
+        border: Border.all(color: const Color(0xFF6B3037)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +428,7 @@ class _FoodDeleteDiff extends StatelessWidget {
             children: [
               const Icon(
                 Icons.delete_outline_rounded,
-                color: Color(0xFFA8322A),
+                color: Color(0xFFF87171),
               ),
               const SizedBox(width: 12),
               Expanded(

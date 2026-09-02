@@ -31,7 +31,7 @@ void main() {
       await tester.pumpWidget(EvaluatorApp(state: state, toolHost: host));
       await _settle(tester);
 
-      expect(find.text('Train with context'), findsOneWidget);
+      expect(find.text('Repeat Lower strength'), findsOneWidget);
       expect(host.activeNames.toSet(), {
         'hustl_get_today_context',
         'hustl_open_surface',
@@ -72,7 +72,7 @@ void main() {
     await tester.pumpWidget(EvaluatorApp(state: state));
     await _settle(tester);
 
-    expect(find.text('Train with context'), findsOneWidget);
+    expect(find.text('Repeat Lower strength'), findsOneWidget);
     expect(find.textContaining('Demo data'), findsNothing);
     expect(find.textContaining('Reset demo'), findsNothing);
     expect(find.textContaining('Confirm goal'), findsNothing);
@@ -96,6 +96,7 @@ void main() {
     expect(find.text('2,400 kcal'), findsOneWidget);
     expect(find.text('2,100 kcal'), findsOneWidget);
     expect(find.textContaining('caloriesTarget'), findsNothing);
+    await _scrollTo(tester, 'Apply');
     expect(find.text('Apply'), findsOneWidget);
     expect(find.text('Dismiss'), findsOneWidget);
 
@@ -109,7 +110,7 @@ void main() {
     expect(find.text('Continue to Train'), findsOneWidget);
     await tester.tap(find.text('Continue to Train'));
     await _settle(tester);
-    expect(find.text('118 / 180 g'), findsOneWidget);
+    expect(find.text('Repeat Lower strength'), findsOneWidget);
 
     final foodProposal = state.propose(
       ProposalKind.foodLog,
@@ -133,6 +134,7 @@ void main() {
     await tester.tap(find.text('Nutrition'));
     await _settle(tester);
     expect(find.text('1,482 / 2,100 kcal'), findsOneWidget);
+    await _scrollTo(tester, '3 meals logged');
     expect(find.text('3 meals logged'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
@@ -170,6 +172,7 @@ void main() {
 
     await tester.tap(find.text(applyProposal.title));
     await _settle(tester);
+    await _scrollTo(tester, 'Apply');
     await tester.tap(find.text('Apply'));
     await _settle(tester);
     expect(
@@ -179,6 +182,7 @@ void main() {
     expect(host.activeNames, hasLength(7));
     expect(host.registrationAttempts, coachRegistrationAttempts);
 
+    await _scrollTo(tester, 'Back to Coach', delta: -180);
     await tester.tap(find.text('Back to Coach'));
     await _settle(tester);
     expect(host.activeNames, hasLength(7));
@@ -186,6 +190,7 @@ void main() {
 
     await tester.tap(find.text(dismissProposal.title));
     await _settle(tester);
+    await _scrollTo(tester, 'Dismiss');
     await tester.tap(find.text('Dismiss'));
     await _settle(tester);
     expect(
@@ -195,6 +200,7 @@ void main() {
     expect(host.activeNames, hasLength(7));
     expect(host.registrationAttempts, coachRegistrationAttempts);
 
+    await _scrollTo(tester, 'Back to Coach', delta: -180);
     await tester.tap(find.text('Back to Coach'));
     await _settle(tester);
     expect(host.activeNames, hasLength(7));
@@ -248,6 +254,7 @@ void main() {
         'route': '/proposals/${proposal.id}',
       });
       expect(find.text(proposal.title), findsWidgets);
+      await _scrollTo(tester, 'Apply');
       expect(find.text('Apply'), findsOneWidget);
       expect(find.text('Dismiss'), findsOneWidget);
       expect(host.activeNames, hasLength(7));
@@ -285,7 +292,7 @@ void main() {
 
     await tester.tap(find.text('Return to Train'));
     await _settle(tester);
-    expect(find.text('Train with context'), findsOneWidget);
+    expect(find.text('Repeat Lower strength'), findsOneWidget);
     expect(state.proposalById(proposal.id)!.status, ProposalStatus.pending);
     expect(host.activeNames.toSet(), {
       'hustl_get_today_context',
@@ -325,7 +332,7 @@ void main() {
     );
     await tester.tap(find.text('Return to Train'));
     await _settle(tester);
-    expect(find.text('Train with context'), findsOneWidget);
+    expect(find.text('Repeat Lower strength'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -336,6 +343,19 @@ Future<void> _settle(WidgetTester tester) async {
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 100));
   await tester.pump(const Duration(milliseconds: 300));
+}
+
+Future<void> _scrollTo(
+  WidgetTester tester,
+  String text, {
+  double delta = 180,
+}) async {
+  await tester.scrollUntilVisible(
+    find.text(text),
+    delta,
+    scrollable: find.byType(Scrollable).last,
+  );
+  await _settle(tester);
 }
 
 class _QuotaHost implements ToolHost {
