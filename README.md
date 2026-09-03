@@ -1,80 +1,85 @@
 # Hustl WebMCP evaluator
 
-This repository contains the standalone Flutter evaluator used for the Hustl
-WebMCP challenge. The repository's About section links to the deployed build.
+This repository is a deterministic, offline-safe evaluator for Hustl's WebMCP
+Challenge submission. It preserves the real Flutter presentation and WebMCP
+coordinator from Hustl commit `f52fd2196a5e77c6eb8083df0342ed68d46aeee4`,
+while replacing private infrastructure with in-memory demo repositories and
+explicit no-op seams.
 
-The evaluator uses synthetic, in-memory training, recovery, nutrition,
-template, and Coach data. It does not connect to a Hustl account, backend,
-authentication service, analytics service, persistent store, or production
-endpoint.
-
-The athlete states the goal in the AI conversation. WebMCP can read bounded
-current context, history, and trends, then prepare nutrition, food-log,
-food-correction, food-removal, and workout-template proposals. New proposals
-are pending until the athlete uses the visible Apply or Dismiss control in
-Coach.
-
-Pending proposal details include Return to Train. After review, the action
-changes to Continue to Train. Both routes preserve the in-memory session. If a
-proposal link is refreshed after that state has been lost, the page explains
-what happened and links back to Train.
+The evaluator contains no production credentials, authenticated user data,
+backend client, token storage, analytics, or deployment history. Mutating
+WebMCP tools create reviewable, pending proposals; they do not silently apply
+changes.
 
 ## Run locally
 
-```bash
-flutter pub get
+Prerequisites: the Flutter version pinned in `.tool-versions` and Node.js 20+.
+Always use the guarded release bundle; a raw Flutter development server does
+not inject the evaluator runtime boundary.
+
+```sh
 bash scripts/build.sh
-python3 -m http.server 8767 -d build/web
+python3 -m http.server 8767 --directory build/web
 ```
 
-Open `http://127.0.0.1:8767`. The evaluator must run from the built output so
-the pre-Flutter runtime guard can execute. Do not use `flutter run` for this
-test path.
-
-Reloading restores the original synthetic data and empties the Coach inbox.
-`/demo` redirects to `/` for compatibility. The evaluator does not add a demo
-banner, goal form, reset control, or separate product flow.
+Then open `http://127.0.0.1:8767`.
 
 ## Validate
 
-```bash
+```sh
+bash scripts/verify.sh
 flutter analyze --no-pub
-flutter test --no-pub -r compact
+flutter test --no-pub test/core/webmcp test/app/demo test/app/navigation
 node --test test/webmcp/*.mjs
 bash scripts/build.sh
 ```
 
-CI pins Flutter 3.38.7 and Gitleaks 8.30.1 by checksum. It also pins Node
-22.23.2 and each external GitHub Action by commit. The workflow scans the
-current source, full Git history, and generated build; checks bundled font
-licenses; uploads a SHA-256 file manifest; and issues GitHub build-provenance
-attestations for `main`. GitHub updates its hosted runner image, so the
-workflow records the runner image identifiers instead of claiming that the
-base image is byte-reproducible.
+`scripts/verify.sh` checks provenance, manifest integrity, forbidden private
+paths and network origins, symlinks, Git isolation, and the built runtime guard.
 
-See `CONTRIBUTING.md` for change requirements, `SECURITY.md` for vulnerability
-reporting, and `RELEASING.md` for publication and deployment checks.
+## Surfaces
 
-`public_manifest.txt` lists every file allowed in a public export. An export
-must contain exactly those files and must start with an independent Git
-history. Private release tooling stays outside this repository. It builds the
-public snapshot from frozen Git objects, not from a developer working tree or
-private repository history.
+| Surface | Route | Purpose |
+| --- | --- | --- |
+| Train | `/` | Training context, history, exercise history, and workout launch |
+| Nutrition | `/nutrition` | Food diary and review-first food/target proposals |
+| Recover | `/health` | Recovery context and health overview |
+| Coach | `/proposals` | Pending proposal inbox and activity |
+| Proposal detail | `/proposals/:id` | Explicit review of a staged change |
+| Templates | `/templates` | Workout-template library |
+| Template detail | `/templates/:id` | Template context and staged edits |
+| Active workout | `/workout_session` | Active-workout state and staged adjustment |
 
-## Runtime limits
+`/workout` aliases the active-workout route and `/account` redirects to Coach.
+WebMCP discovery is route-scoped: only tools relevant to the current surface
+are registered, with shared navigation and today-context tools always present.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the complete tool inventory.
 
-- synthetic data only;
-- no network calls except same-origin build assets;
-- in-memory browser storage and product state;
-- restrictive CSP plus a pre-Flutter runtime guard;
-- cookie clearing on evaluator documents and deep links, never on the
-  credentialless static assets needed to bootstrap Flutter;
-- route-scoped WebMCP registrations with stale-route rejection;
-- no WebMCP Apply, Dismiss, approval, reset, or bypass tool.
+## Provenance and regeneration
 
-The evaluator omits active-workout tools and the `/workout_session` route. The
-challenge flow covers planning before training and review afterward: recent
-history, recovery, nutrition, meal changes, and workout programming. It does
-not cover logging sets during a workout.
+`config/source.json` pins the upstream commit. `config/source_manifest.txt`
+labels every Dart file as either exact upstream `source` or public-safety
+`overlay`. `config/static_manifest.txt` lists the remaining public files.
 
-This evaluator is not medical software and does not provide diagnosis.
+To regenerate into a new directory from a local Hustl checkout containing the
+pinned object:
+
+```sh
+bash scripts/regenerate.sh /path/to/hustl /tmp/hustl-public-rebuilt
+```
+
+The script refuses a different commit, an existing destination, unsafe paths,
+or missing objects. It creates a disconnected Git repository with one
+deterministic root commit, then runs `bash scripts/verify.sh` itself.
+
+## Scope
+
+This is an evaluator, not a production client. The included fixtures are
+synthetic and deterministic. Camera/barcode packages remain because the real
+Nutrition UI imports those widgets, but public demo repositories never call a
+remote meal-analysis service. The runtime guard blocks unexpected network
+requests and browser credential APIs.
+
+The code is MIT licensed. See [LICENSE](LICENSE),
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and
+[SECURITY.md](SECURITY.md).

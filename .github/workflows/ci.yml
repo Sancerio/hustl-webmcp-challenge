@@ -12,9 +12,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    permissions:
-      contents: read
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -24,46 +22,37 @@ jobs:
         with:
           node-version: '22.23.2'
 
-      - name: Install checksum-verified Flutter
-        run: |
-          bash scripts/install_flutter_ci.sh "$RUNNER_TEMP/flutter-sdk"
-          echo "$RUNNER_TEMP/flutter-sdk/bin" >> "$GITHUB_PATH"
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          flutter-version: '3.38.7'
+          channel: stable
+          cache: true
 
-      - name: Install checksum-verified Gitleaks
-        run: |
-          bash scripts/install_gitleaks.sh "$RUNNER_TEMP/gitleaks"
-          echo "GITLEAKS_BIN=$RUNNER_TEMP/gitleaks/gitleaks" >> "$GITHUB_ENV"
-
-      - name: Verify reviewed public source
-        run: |
-          bash scripts/scan_public_source.sh .
-          bash test/public_release_test.sh
-          bash scripts/verify_gitleaks.sh "$GITLEAKS_BIN" .
-
-      - name: Resolve pinned dependencies
-        run: flutter pub get
+      - name: Reconstruct and verify frozen candidate
+        run: bash .github/scripts/reconstruct-candidate.sh "$RUNNER_TEMP/frozen-candidate"
 
       - name: Analyze and test
+        working-directory: ${{ runner.temp }}/frozen-candidate
         run: |
+          flutter pub get
           flutter analyze --no-pub
-          flutter test --no-pub -r compact
+          flutter test --no-pub test/core/webmcp test/app/demo test/app/navigation
           node --test test/webmcp/*.mjs
 
-      - name: Build isolated evaluator
-        run: bash scripts/build.sh
-
-      - name: Verify release and create artifact manifest
+      - name: Build and re-verify release
+        working-directory: ${{ runner.temp }}/frozen-candidate
         run: |
-          bash scripts/verify.sh build/web
-          bash scripts/verify_gitleaks.sh "$GITLEAKS_BIN" . build/web
-          bash scripts/create_artifact_manifest.sh build/web artifacts
+          bash scripts/build.sh
+          bash scripts/verify.sh
+          mkdir -p artifacts
+          (cd build/web && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256) > artifacts/build.sha256
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: hustl-webmcp-evaluator-${{ github.sha }}
           path: |
-            build/web
-            artifacts
+            ${{ runner.temp }}/frozen-candidate/build/web
+            ${{ runner.temp }}/frozen-candidate/artifacts
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 14

@@ -1,8 +1,8 @@
 {
-  "mode": "synthetic-in-memory",
-  "network": "same-origin-assets-only",
-  "authentication": false,
-  "persistence": false,
-  "telemetry": false,
-  "webmcp": true
+  "HUSTL_API_BASE_URL": "https://offline.invalid",
+  "HUSTL_CHALLENGE": "true",
+  "HUSTL_DEMO": "true",
+  "HUSTL_MCP_CONNECTOR_URL": "https://offline.invalid/mcp",
+  "HUSTL_TELEMETRY": "false",
+  "HUSTL_WEBMCP": "true"
 }
