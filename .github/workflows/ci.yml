@@ -28,6 +28,17 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Install checksum-verified ripgrep
+        run: |
+          curl --fail --silent --show-error --location \
+            https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-x86_64-unknown-linux-musl.tar.gz \
+            --output "$RUNNER_TEMP/ripgrep.tar.gz"
+          echo '1c9297be4a084eea7ecaedf93eb03d058d6faae29bbc57ecdaf5063921491599  ripgrep.tar.gz' \
+            | (cd "$RUNNER_TEMP" && sha256sum --check)
+          tar --extract --gzip --file "$RUNNER_TEMP/ripgrep.tar.gz" \
+            --directory "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/ripgrep-15.1.0-x86_64-unknown-linux-musl" >> "$GITHUB_PATH"
+
       - name: Reconstruct and verify frozen candidate
         run: bash .github/scripts/reconstruct-candidate.sh "$RUNNER_TEMP/frozen-candidate"
 
