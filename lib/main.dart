@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 
-import 'src/app.dart';
-import 'src/model/evaluator_state.dart';
+import 'app/public_app.dart';
+import 'app/public_dependencies.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  usePathUrlStrategy();
-  final state = EvaluatorState();
-  await state.loadFixtures();
-  runApp(EvaluatorApp(state: state));
+  await setupPublicDependencies();
+  runApp(const PublicHustlApp());
 }

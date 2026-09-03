@@ -1,21 +1,21 @@
 # Third-party notices
 
-This package uses Flutter and the Dart packages declared in `pubspec.yaml`.
-Their licenses remain available from their respective upstream distributions.
+This evaluator includes third-party components under their respective terms.
 
 ## DM Sans
 
-DM Sans is distributed under the SIL Open Font License 1.1. The complete
-license is included at `assets/fonts/OFL-DMSans.txt`. The evaluator registers
-these local font files as its Roboto-compatible web family solely to prevent
-Flutter from requesting a remote fallback font.
+The bundled DM Sans font files are licensed under the SIL Open Font License
+1.1. The full license is included at `assets/fonts/OFL-DMSans.txt`.
 
-## Noto Sans Symbols
+## Microsoft Fluent Emoji
 
-The evaluator vendors the exact Noto Sans Symbols webfont requested by the
-Flutter web engine so symbol fallback remains same-origin and works offline.
-Noto Sans Symbols is distributed under the SIL Open Font License 1.1. The
-complete license is included at `assets/fonts/OFL-NotoSansSymbols.txt`.
+The food SVG subset under `assets/icons/food/` is derived from Microsoft Fluent
+Emoji (Flat style), distributed under the MIT License. The complete notice is
+included at `assets/icons/food/LICENSE-fluent-emoji.txt` and the source is
+<https://github.com/microsoft/fluentui-emoji>.
 
-The small exercise catalog and SVG mark in this repository were authored for
-this evaluator and are distributed under this repository's MIT license.
+## Flutter and Dart packages
+
+Dependencies are declared in `pubspec.yaml` and locked in `pubspec.lock`.
+They remain subject to their individual licenses. This notice does not replace
+those license texts or package metadata.
